@@ -1,0 +1,260 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Pet-microservice",
+    "description": "Especificación de la API REST del microservicio desarrollado en Go relativo al manejo de información de mascotas.\n\nEnlace al repositorio:\n- [Pet-microservice repository](https://github.com/JaimePalomo/pet-microservice)",
+    "contact": {
+      "email": "palomosivianesjaime@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://3.124.185.228:80"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Pets",
+      "description": "Endpoints sobre mascotas"
+    },
+    {
+      "name": "Health",
+      "description": "Endpoint para la comprobación del buen funcionamiento del microservicio."
+    }
+  ],
+  "paths": {
+    "/creamascota": {
+      "post": {
+        "tags": [
+          "Pets"
+        ],
+        "summary": "Crea una nueva mascota",
+        "description": "Crea una nueva mascota y la añade a la base de datos con todos sus atributos. Edad y fecha de nacimiento de la mascota deben ser coherentes. Fecha de nacimiento debe tener el formato 01/02/2006. El género debe ser M o H.",
+        "operationId": "createPet",
+        "requestBody": {
+          "description": "Crea una nueva mascota",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Mascota creada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestCreaMascota"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kpidemascotas": {
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "summary": "Obtiene edad promedio y desviación típica de una especie.",
+        "description": "Obtiene edad promedio y desviación típica de una especie pasada por query. En caso de no pasar ninguna especie, se obtendrá de la más numerosa.",
+        "operationId": "kpiMascotas",
+        "parameters": [
+          {
+            "name": "especie",
+            "in": "query",
+            "description": "Especie a obtener los datos",
+            "required": false,
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datos obtenidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Kpi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "La especie introducida no está presente en la base de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundKpi"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error al calcular edad media o variación típica.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lismascotas": {
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "summary": "Obtiene todos las mascotas",
+        "description": "Obtiene todas las mascotas presentes en la base de datos.",
+        "operationId": "getMascotas",
+        "responses": {
+          "200": {
+            "description": "Mascotas obtenidas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pet"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No se han encontrado mascotas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundMascotas"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Comprueba el buen estado del microservicio",
+        "description": "Comprueba el buen estado del microservicio",
+        "operationId": "ping",
+        "responses": {
+          "200": {
+            "description": "Acción exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pong"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pet": {
+        "required": [
+          "nombre",
+          "especie",
+          "genero",
+          "edad",
+          "fecha_nacimiento"
+        ],
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "example": "tobi"
+          },
+          "especie": {
+            "type": "string",
+            "example": "perro"
+          },
+          "genero": {
+            "type": "string",
+            "example": "M"
+          },
+          "edad": {
+            "type": "integer",
+            "example": 10
+          },
+          "fecha_nacimiento": {
+            "type": "string",
+            "example": "01/01/2012"
+          }
+        }
+      },
+      "Kpi": {
+        "required": [
+          "especie",
+          "edad_media",
+          "desviacion_estandar"
+        ],
+        "type": "object",
+        "properties": {
+          "especie": {
+            "type": "string",
+            "example": "perro"
+          },
+          "edad_media": {
+            "type": "number",
+            "example": 4.3
+          },
+          "desviacion_estandar": {
+            "type": "number",
+            "example": 0.72
+          }
+        }
+      },
+      "Pong": {
+        "type": "string",
+        "example": "pong"
+      },
+      "BadRequestCreaMascota": {
+        "type": "string",
+        "example": "invalid json body"
+      },
+      "NotFoundKpi": {
+        "type": "string",
+        "example": "no pets found for the given especie"
+      },
+      "InternalError": {
+        "type": "string",
+        "example": "error getting average age"
+      },
+      "NotFoundMascotas": {
+        "type": "string",
+        "example": "no pets found"
+      }
+    }
+  }
+}
