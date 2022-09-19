@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+//Pong handler del endpoint /ping
 func Pong(c *gin.Context) {
 	c.String(http.StatusOK, "pong")
 }

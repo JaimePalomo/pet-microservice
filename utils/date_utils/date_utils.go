@@ -6,6 +6,7 @@ const (
 	DateLayout = "02/01/2006"
 )
 
+//Parse comprueba que la fecha pasada es del formato 01/02/2006
 func Parse(date string) (string, error) {
 	dateParsed, err := time.Parse(DateLayout, date)
 	if err != nil {
@@ -14,6 +15,7 @@ func Parse(date string) (string, error) {
 	return dateParsed.Format(DateLayout), nil
 }
 
+//CheckAgeAndBirthCoherence comprueba si la edad y fecha de nacimiento pasada son coherentes
 func CheckAgeAndBirthCoherence(age int, birthDate string) bool {
 	date, _ := time.Parse(DateLayout, birthDate)
 	birthDatePlusAge := date.AddDate(age, 0, 0)

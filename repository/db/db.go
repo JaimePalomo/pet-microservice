@@ -6,6 +6,7 @@ import (
 	"pet-microservice/utils/rest_errors"
 )
 
+//La base de datos será una base de datos en memoria
 type petDb struct {
 	petMap        map[string]pet.Pet
 	populationMap map[string]int
@@ -18,12 +19,14 @@ type PetDb interface {
 	GetMostPopularEspecie() (string, rest_errors.RestError)
 }
 
+//New construye el controlador de la base de datos
 func New() PetDb {
 	petMap := make(map[string]pet.Pet)
 	populationMap := make(map[string]int)
 	return &petDb{petMap: petMap, populationMap: populationMap}
 }
 
+//InsertPet inserta una nueva mascota en la base de datos
 func (p *petDb) InsertPet(pet pet.Pet) rest_errors.RestError {
 	p.petMap[pet.Nombre] = pet
 	value, exist := p.populationMap[pet.Especie]
@@ -35,6 +38,7 @@ func (p *petDb) InsertPet(pet pet.Pet) rest_errors.RestError {
 	return nil
 }
 
+//GetAllPets obtiene todos las mascotas presentes en la base de datos
 func (p *petDb) GetAllPets() ([]pet.Pet, rest_errors.RestError) {
 	var resultSlice []pet.Pet
 	for _, pet := range p.petMap {
@@ -46,6 +50,7 @@ func (p *petDb) GetAllPets() ([]pet.Pet, rest_errors.RestError) {
 	return resultSlice, nil
 }
 
+//GetPetsByEspecie obtiene todas las mascotas de la especie dada
 func (p *petDb) GetPetsByEspecie(especie string) (pet.GroupOfPets, rest_errors.RestError) {
 	var resultSlice []pet.Pet
 	for _, pet := range p.petMap {
@@ -59,6 +64,7 @@ func (p *petDb) GetPetsByEspecie(especie string) (pet.GroupOfPets, rest_errors.R
 	return resultSlice, nil
 }
 
+//GetMostPopularEspecie obtiene la especie más repetida en la base de datos
 func (p *petDb) GetMostPopularEspecie() (string, rest_errors.RestError) {
 	var mostPopularEspecie string
 	var biggestPopulation int

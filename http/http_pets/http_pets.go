@@ -18,10 +18,12 @@ type PetsHandler interface {
 	GetKpi(*gin.Context)
 }
 
+//New inicia el controlador de los handlers de los endpoints
 func New(petService pet_service.PetService) PetsHandler {
 	return &petsHandler{petService: petService}
 }
 
+//CreatePet handler del endpoint /creamascota
 func (p *petsHandler) CreatePet(c *gin.Context) {
 	var pet pet.Pet
 	if err := c.ShouldBindJSON(&pet); err != nil {
@@ -38,6 +40,7 @@ func (p *petsHandler) CreatePet(c *gin.Context) {
 	c.JSON(http.StatusCreated, result)
 }
 
+//GetAllPets handler del endpoint /lismascotas
 func (p *petsHandler) GetAllPets(c *gin.Context) {
 	pets, err := p.petService.GetAllPets()
 	if err != nil {
@@ -47,6 +50,7 @@ func (p *petsHandler) GetAllPets(c *gin.Context) {
 	c.JSON(http.StatusOK, pets)
 }
 
+//GetKpi handler del endpoint /kpidemascotas
 func (p *petsHandler) GetKpi(c *gin.Context) {
 	var err rest_errors.RestError
 	var kpi pet.Kpi
@@ -65,6 +69,7 @@ func (p *petsHandler) GetKpi(c *gin.Context) {
 
 }
 
+//getEspecieFromQuery obtiene la especie obtenida por query
 func getEspecieFromQuery(c *gin.Context) string {
 	value, exist := c.GetQuery("especie")
 	if !exist {

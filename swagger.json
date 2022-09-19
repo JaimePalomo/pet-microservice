@@ -30,7 +30,7 @@
           "Pets"
         ],
         "summary": "Crea una nueva mascota",
-        "description": "Crea una nueva mascota y la añade a la base de datos con todos sus atributos. Edad y fecha de nacimiento de la mascota deben ser coherentes. Fecha de nacimiento debe tener el formato 01/02/2006. El género debe ser M o H.",
+        "description": "Crea una nueva mascota y la añade a la base de datos con todos sus atributos. Todos los parámetros son necesarios. Edad y fecha de nacimiento de la mascota deben ser coherentes. Fecha de nacimiento debe tener el formato 01/02/2006. El género debe ser M o H.",
         "operationId": "createPet",
         "requestBody": {
           "description": "Crea una nueva mascota",
