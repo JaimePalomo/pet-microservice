@@ -1,11 +1,13 @@
 package app
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"pet-microservice/http/http_pets"
 	"pet-microservice/http/http_ping"
 	"pet-microservice/repository/db"
 	"pet-microservice/services/pet_service"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -28,6 +30,8 @@ func StartApplication() {
 
 	//Endpoint para comprobar el buen funcionamiento del microservicio
 	router.GET("/ping", http_ping.Pong)
+
+	fmt.Println("Esta es la prueba del git ammend!")
 
 	router.Run(":8080")
 
