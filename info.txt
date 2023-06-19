@@ -3,3 +3,5 @@ critical message that I'm going to commit
 Commit #2 during squash activity
 
 Commit #3
+
+Commit #4
